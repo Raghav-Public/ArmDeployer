@@ -1,0 +1,11 @@
+﻿{
+  "appName": {
+    "value": "Testing"
+  },
+  "appType": {
+    "value": "web"
+  },
+  "appLocation": {
+    "value": "East US"
+  }
+}

@@ -1,0 +1,59 @@
+﻿{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "appName": {
+      "type": "string",
+      "metadata": {
+        "description": ""
+      }
+    },
+    "appType": {
+      "type": "string",
+      "defaultValue": "web",
+      "allowedValues": [
+        "web",
+        "java",
+        "other"
+      ],
+      "metadata": {
+        "description": "web"
+      }
+    },
+    "appLocation": {
+      "type": "string",
+      "defaultValue": "East US",
+      "allowedValues": [
+        "South Central US",
+        "West Europe",
+        "East US",
+        "North Europe"
+      ],
+      "metadata": {
+        "description": ""
+      }
+    }
+  },
+  "variables": {
+  },
+  "resources": [
+    {
+      "type": "microsoft.insights/components",
+      "kind": "[parameters('appType')]",
+      "name": "[parameters('appName')]",
+      "apiVersion": "2014-04-01",
+      "location": "[parameters('appLocation')]",
+      "tags": {},
+      "properties": {
+        "ApplicationId": "[parameters('appName')]"
+      },
+      "dependsOn": []
+    }
+  ],
+  "outputs": {
+    "AppInsightsInstrumentationKey": {
+      "value": "[reference(resourceId('Microsoft.Insights/components', parameters('appName')), '2014-04-01').InstrumentationKey]",
+      "type": "string"
+    }
+  }
+}
