@@ -52,14 +52,14 @@ namespace ArmDeployer
             
             try
             {
-                /*var deployment = azure.Deployments.Define("mytestDeployment")
+                var deployment = azure.Deployments.Define("mytestDeployment")
                     .WithExistingResourceGroup(groupName)
                     .WithTemplateLink(templatePath, "1.0.0.0")
                     .WithParameters(pJObject)
                     //.WithParametersLink(paramPath, "1.0.0.0")
                     .WithMode(Microsoft.Azure.Management.ResourceManager.Fluent.Models.DeploymentMode.Incremental)
                     .Create();
-                */
+    
                 using (var appInsightsManagementClient = new ApplicationInsightsManagementClient(credentials))
                 {
                     appInsightsManagementClient.SubscriptionId = subscriptionId;
