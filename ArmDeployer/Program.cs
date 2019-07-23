@@ -3,6 +3,11 @@ using Microsoft.Azure.Management.Fluent;
 using Microsoft.Azure.Management.ResourceManager.Fluent;
 using Microsoft.Azure.Management.ResourceManager.Fluent.Core;
 using Newtonsoft.Json.Linq;
+using Microsoft.Azure.Management.ResourceManager;
+using Microsoft.Azure.Management.ApplicationInsights.Management;
+using Microsoft.Azure.Management.ApplicationInsights.Management.Models;
+using System.Collections.Generic;
+
 namespace ArmDeployer
 {
     class Program
@@ -15,6 +20,7 @@ namespace ArmDeployer
             var subscriptionId = "";
             var groupName = "";
             var location = Region.USSouthCentral;
+            var appName = "test-app001";
 
             var credentials = SdkContext.AzureCredentialsFactory
                 .FromServicePrincipal(clientId
@@ -40,19 +46,27 @@ namespace ArmDeployer
     
             
             Console.WriteLine("Deploying the template...");
-            var pJObject = JObject.FromObject(new Parameters("test-app", "web", "East US"));
+            var pJObject = JObject.FromObject(new Parameters(appName, "web", "East US"));
 
 
             
             try
             {
-                var deployment = azure.Deployments.Define("mytestDeployment")
+                /*var deployment = azure.Deployments.Define("mytestDeployment")
                     .WithExistingResourceGroup(groupName)
                     .WithTemplateLink(templatePath, "1.0.0.0")
                     .WithParameters(pJObject)
                     //.WithParametersLink(paramPath, "1.0.0.0")
                     .WithMode(Microsoft.Azure.Management.ResourceManager.Fluent.Models.DeploymentMode.Incremental)
                     .Create();
+                */
+                using (var appInsightsManagementClient = new ApplicationInsightsManagementClient(credentials))
+                {
+                    appInsightsManagementClient.SubscriptionId = subscriptionId;
+                    var component = appInsightsManagementClient.Components.Get(groupName, appName);
+                    Console.WriteLine(component.InstrumentationKey);
+                }
+
             }
             catch(Exception exp)
             {
